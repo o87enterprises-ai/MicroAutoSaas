@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getTenant } from "@/lib/tenant";
 import { CallButton } from "./CallButton";
+import { Reveal, RevealWords } from "@/components/cinematic/Reveal";
 
 export function CtaSection({
-  heading = "Need an electrician this week?",
+  heading = "Let's get your power sorted.",
   body,
 }: {
   heading?: string;
@@ -12,25 +13,37 @@ export function CtaSection({
   const t = getTenant();
 
   return (
-    <section className="bg-navy-800">
-      <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
-        <h2 className="text-2xl font-bold text-white sm:text-3xl">{heading}</h2>
-        <p className="mx-auto mt-3 max-w-2xl text-navy-100">
-          {body ??
-            `Call and talk to a licensed electrician, or send a few details and we'll come back to you with a straight answer on scope and cost.`}
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <CallButton
-            phone={t.contact.phone}
-            phoneDisplay={t.contact.phoneDisplay}
-          />
-          <Link
-            href="/contact"
-            className="inline-flex items-center rounded-lg border border-navy-200/40 px-5 py-3 font-semibold text-white transition-colors hover:bg-navy-700"
-          >
-            Request an estimate
-          </Link>
-        </div>
+    <section className="relative overflow-hidden border-t border-white/[0.07] bg-ink-850 py-28">
+      {/* Amber bloom behind the copy — the only light in the room. */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 opacity-60"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(245,165,36,0.16), transparent 70%)",
+        }}
+      />
+      <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
+        <h2 className="display text-4xl text-chalk sm:text-5xl">
+          <RevealWords text={heading} />
+        </h2>
+        <Reveal delay={180}>
+          <p className="mx-auto mt-6 max-w-xl leading-relaxed text-chalk-dim">
+            {body ??
+              "Call and talk to a licensed electrician, or send a few details and get a straight answer on scope and cost."}
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <CallButton
+              phone={t.contact.phone}
+              phoneDisplay={t.contact.phoneDisplay}
+            />
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-chalk transition-colors hover:border-amber-brand hover:text-amber-brand"
+            >
+              Request an estimate
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

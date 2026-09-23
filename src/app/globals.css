@@ -1,46 +1,83 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy-50: #f2f6fb;
-  --color-navy-100: #dfe8f4;
-  --color-navy-200: #bacee6;
-  --color-navy-600: #164a84;
-  --color-navy-700: #10375f;
-  --color-navy-800: #0b2545;
-  --color-navy-900: #07182e;
+  /* Base — near-black, cool. The site lives at night. */
+  --color-ink-900: #03050a;
+  --color-ink-850: #06090f;
+  --color-ink-800: #0a0e16;
+  --color-ink-700: #111722;
+  --color-ink-600: #1b2331;
+  --color-ink-500: #2a3445;
 
+  /* Amber is the only accent — it reads as current, heat, light. */
   --color-amber-brand: #f5a524;
-  --color-amber-brand-dark: #d68910;
+  --color-amber-bright: #ffd489;
+  --color-amber-dark: #c77f12;
 
+  --color-chalk: #f4f6fa;
+  --color-chalk-dim: #a8b2c4;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  --shadow-card: 0 1px 2px rgb(7 24 46 / 0.06), 0 8px 24px -12px rgb(7 24 46 / 0.18);
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--color-ink-900);
 }
 
 body {
-  background: #ffffff;
-  color: var(--color-navy-900);
+  background: var(--color-ink-900);
+  color: var(--color-chalk);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Leave room for the fixed mobile call bar so it never covers content. */
 @media (max-width: 767px) {
   body {
     padding-bottom: 4.5rem;
   }
 }
 
+/* Display type wants tighter tracking at large sizes. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* Hairline rules used between sections. */
+.rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgb(245 165 36 / 0.35),
+    transparent
+  );
+}
+
 ::selection {
   background: var(--color-amber-brand);
-  color: var(--color-navy-900);
+  color: var(--color-ink-900);
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-amber-brand);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-amber-brand);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

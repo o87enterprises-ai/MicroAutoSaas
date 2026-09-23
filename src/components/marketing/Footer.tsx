@@ -8,87 +8,90 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-20 bg-navy-900 text-navy-100">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative border-t border-white/[0.07] bg-ink-850">
+      <div className="rule absolute inset-x-0 top-0" />
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <h2 className="text-base font-bold text-white">{t.businessName}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-navy-200">
+            <h2 className="display text-xl uppercase tracking-[0.1em] text-chalk">
+              South Valley<span className="text-amber-brand"> Electric</span>
+            </h2>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-chalk-dim">
               {t.tagline}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-brand">
-              Contact
-            </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+          <FooterCol title="Contact">
+            {isPlaceholder(t.contact.phone) ? (
+              <li className="text-chalk-dim">Phone: TBD</li>
+            ) : (
               <li>
-                {isPlaceholder(t.contact.phone) ? (
-                  <span className="text-navy-200">Phone: TBD</span>
-                ) : (
-                  <a href={`tel:${t.contact.phone}`} className="hover:text-amber-brand">
-                    {orTBD(t.contact.phoneDisplay)}
-                  </a>
-                )}
+                <a href={`tel:${t.contact.phone}`} className="hover:text-amber-brand">
+                  {orTBD(t.contact.phoneDisplay)}
+                </a>
               </li>
+            )}
+            {isPlaceholder(t.contact.email) ? (
+              <li className="text-chalk-dim">Email: TBD</li>
+            ) : (
               <li>
-                {isPlaceholder(t.contact.email) ? (
-                  <span className="text-navy-200">Email: TBD</span>
-                ) : (
-                  <a href={`mailto:${t.contact.email}`} className="hover:text-amber-brand">
-                    {orTBD(t.contact.email)}
-                  </a>
-                )}
+                <a href={`mailto:${t.contact.email}`} className="hover:text-amber-brand">
+                  {orTBD(t.contact.email)}
+                </a>
               </li>
-              <li className="text-navy-200">
-                {t.address.city}, {t.address.state} {orTBD(t.address.postalCode, "")}
+            )}
+            <li className="text-chalk-dim">
+              {t.address.city}, {t.address.state}{" "}
+              {orTBD(t.address.postalCode, "")}
+            </li>
+          </FooterCol>
+
+          <FooterCol title="Hours">
+            <li className="text-chalk-dim">Mon–Fri · {t.hours.weekdays}</li>
+            <li className="text-chalk-dim">Saturday · {t.hours.saturday}</li>
+            <li className="text-chalk-dim">Sunday · {t.hours.sunday}</li>
+          </FooterCol>
+
+          <FooterCol title="Site">
+            {NAV_LINKS.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="text-chalk-dim hover:text-amber-brand">
+                  {l.label}
+                </Link>
               </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-brand">
-              Hours
-            </h3>
-            <ul className="mt-3 space-y-2 text-sm text-navy-200">
-              <li>Mon–Fri: {t.hours.weekdays}</li>
-              <li>Saturday: {t.hours.saturday}</li>
-              <li>Sunday: {t.hours.sunday}</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-brand">
-              Site
-            </h3>
-            <ul className="mt-3 space-y-2 text-sm">
-              {NAV_LINKS.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="text-navy-200 hover:text-amber-brand">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            ))}
+          </FooterCol>
         </div>
 
-        {/* Oregon CCB license disclosure — legally required. BRIEF §7.3. */}
-        <div className="mt-12 border-t border-navy-700 pt-6 text-xs leading-relaxed text-navy-200">
+        {/* Oregon CCB disclosure — legally required. BRIEF §7.3. */}
+        <div className="mt-14 flex flex-col gap-3 border-t border-white/[0.07] pt-6 text-xs text-chalk-dim sm:flex-row sm:items-center sm:justify-between">
           <p>
-            <span className="font-semibold text-white">
+            <span className="font-semibold text-chalk">
               Oregon CCB #{orTBD(t.ccbNumber, "pending")}
             </span>
             {" · "}
             {t.insuranceStatement}
           </p>
-          <p className="mt-2">
-            © {year} {t.businessName}. Serving {t.serviceArea.slice(0, 3).join(", ")} and
-            surrounding communities.
+          <p>
+            © {year} {t.businessName}
           </p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterCol({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <h3 className="eyebrow text-amber-brand">{title}</h3>
+      <ul className="mt-4 space-y-2.5 text-sm">{children}</ul>
+    </div>
   );
 }

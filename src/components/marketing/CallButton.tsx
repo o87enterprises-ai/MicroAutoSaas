@@ -4,21 +4,30 @@ type Props = {
   phone: Placeholder<string>;
   phoneDisplay: Placeholder<string>;
   className?: string;
-  /** Short form for tight spaces. */
-  compact?: boolean;
+  variant?: "solid" | "outline";
 };
 
 /**
- * Click-to-call. Renders as a disabled pill when the number is still
- * unknown, so a placeholder can never masquerade as a working CTA.
+ * Click-to-call. Renders inert when the number is unknown, so a placeholder
+ * can never masquerade as a working CTA.
  */
-export function CallButton({ phone, phoneDisplay, className = "", compact }: Props) {
-  const label = compact ? "Call now" : `Call ${isPlaceholder(phoneDisplay) ? "" : phoneDisplay}`.trim();
+export function CallButton({
+  phone,
+  phoneDisplay,
+  className = "",
+  variant = "solid",
+}: Props) {
+  const base =
+    "group inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-semibold tracking-wide transition-all duration-300";
+  const skin =
+    variant === "solid"
+      ? "bg-amber-brand text-ink-900 hover:bg-amber-bright hover:shadow-[0_0_40px_-8px_rgba(245,165,36,0.7)]"
+      : "border border-white/20 text-chalk hover:border-amber-brand hover:text-amber-brand";
 
   if (isPlaceholder(phone)) {
     return (
       <span
-        className={`inline-flex items-center gap-2 rounded-lg bg-navy-100 px-5 py-3 font-semibold text-navy-600 ${className}`}
+        className={`${base} cursor-not-allowed border border-white/15 text-chalk-dim ${className}`}
         title="Phone number pending discovery call"
       >
         <PhoneIcon />
@@ -28,17 +37,14 @@ export function CallButton({ phone, phoneDisplay, className = "", compact }: Pro
   }
 
   return (
-    <a
-      href={`tel:${phone}`}
-      className={`inline-flex items-center gap-2 rounded-lg bg-amber-brand px-5 py-3 font-semibold text-navy-900 transition-colors hover:bg-amber-brand-dark ${className}`}
-    >
+    <a href={`tel:${phone}`} className={`${base} ${skin} ${className}`}>
       <PhoneIcon />
-      {label}
+      {isPlaceholder(phoneDisplay) ? "Call now" : phoneDisplay}
     </a>
   );
 }
 
-export function PhoneIcon({ className = "h-5 w-5" }: { className?: string }) {
+export function PhoneIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
       <path

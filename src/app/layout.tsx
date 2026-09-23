@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 import "./globals.css";
 import { getTenant } from "@/lib/tenant";
 import { orTBD } from "@/config/types";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+});
 
 export function generateMetadata(): Metadata {
   const t = getTenant();
@@ -39,7 +44,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>{children}</body>
+      <body className={`${inter.variable} ${archivo.variable} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }
