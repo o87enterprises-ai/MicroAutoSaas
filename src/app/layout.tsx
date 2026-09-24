@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Inter } from "next/font/google";
 import "./globals.css";
-import { getTenant } from "@/lib/tenant";
+import { getTenant, isLiveSite } from "@/lib/tenant";
 import { orTBD } from "@/config/types";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -32,9 +32,10 @@ export function generateMetadata(): Metadata {
       locale: "en_US",
     },
     robots: {
-      // Nothing gets indexed until the site is genuinely live on its own domain.
-      index: process.env.VERCEL_ENV === "production",
-      follow: process.env.VERCEL_ENV === "production",
+      // Nothing gets indexed until the site is genuinely live on its own
+      // domain. Preview deploys must never compete with the real site.
+      index: isLiveSite(),
+      follow: isLiveSite(),
     },
   };
 }

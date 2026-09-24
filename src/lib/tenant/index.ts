@@ -21,12 +21,16 @@ function missingRequiredFacts(t: TenantConfig): string[] {
   return missing;
 }
 
-/** True when the site is being served as the real, public production site. */
-function isPublicProduction(): boolean {
-  return (
-    process.env.NODE_ENV === "production" &&
-    process.env.VERCEL_ENV === "production"
-  );
+/**
+ * True only when this build is the real, public, indexable site.
+ *
+ * Deliberately an explicit opt-in rather than a host-specific variable:
+ * keying off VERCEL_ENV meant the guard silently never fired anywhere else,
+ * so a build with placeholder facts could go live unchallenged. Set
+ * SITE_STAGE=live when — and only when — launching for real.
+ */
+export function isLiveSite(): boolean {
+  return process.env.SITE_STAGE === "live";
 }
 
 /**
@@ -43,9 +47,16 @@ export function getTenant(): TenantConfig {
     );
   }
 
-  if (isPublicProduction()) {
+  if (isLiveSite()) {
     const missing = missingRequiredFacts(tenant);
     if (missing.length > 0) {
+      // Next masks thrown messages in production builds, so print the real
+      // reason first — otherwise launch day is spent chasing a blank digest.
+      console.error(
+        `\n[tenant] Refusing to build "${slug}" as a live site.\n` +
+          `Unresolved facts:\n${missing.map((m) => `  - ${m}`).join("\n")}\n` +
+          `Fill these in src/config/tenants/${slug}.ts, or drop SITE_STAGE=live to build a preview.\n`,
+      );
       throw new Error(
         `Refusing to serve "${slug}" publicly with unresolved facts:\n` +
           missing.map((m) => `  - ${m}`).join("\n") +
@@ -62,5 +73,5 @@ export function getTenant(): TenantConfig {
  * builds show it so nothing placeholder-shaped is mistaken for finished work.
  */
 export function pendingFacts(): string[] {
-  return isPublicProduction() ? [] : missingRequiredFacts(getTenant());
+  return isLiveSite() ? [] : missingRequiredFacts(getTenant());
 }
